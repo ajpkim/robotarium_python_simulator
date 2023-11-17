@@ -9,7 +9,7 @@ import matplotlib.patches as patches
 import rps.utilities.misc as misc
 
 # RobotariumABC: This is an interface for the Robotarium class that
-# ensures the simulator and the robots match up properly.  
+# ensures the simulator and the robots match up properly.
 
 # THIS FILE SHOULD NEVER BE MODIFIED OR SUBMITTED!
 
@@ -22,9 +22,9 @@ class RobotariumABC(ABC):
         assert isinstance(initial_conditions,np.ndarray), "The initial conditions array argument (initial_conditions) provided to create the Robotarium object must be a numpy ndarray. Recieved type %r." % type(initial_conditions).__name__
         assert isinstance(show_figure,bool), "The display figure window argument (show_figure) provided to create the Robotarium object must be boolean type. Recieved type %r." % type(show_figure).__name__
         assert isinstance(sim_in_real_time,bool), "The simulation running at 0.033s per loop (sim_real_time) provided to create the Robotarium object must be boolean type. Recieved type %r." % type(show_figure).__name__
-        
+
         #Check user input ranges/sizes
-        assert (number_of_robots >= 0 and number_of_robots <= 50), "Requested %r robots to be used when creating the Robotarium object. The deployed number of robots must be between 0 and 50." % number_of_robots 
+        assert (number_of_robots >= 0 and number_of_robots <= 50), "Requested %r robots to be used when creating the Robotarium object. The deployed number of robots must be between 0 and 50." % number_of_robots
         if (initial_conditions.size > 0):
             assert initial_conditions.shape == (3, number_of_robots), "Initial conditions provided when creating the Robotarium object must of size 3xN, where N is the number of robots used. Expected a 3 x %r array but recieved a %r x %r array." % (number_of_robots, initial_conditions.shape[0], initial_conditions.shape[1])
 
@@ -60,7 +60,7 @@ class RobotariumABC(ABC):
         self.poses = self.initial_conditions
         if self.initial_conditions.size == 0:
             self.poses = misc.generate_initial_conditions(self.number_of_robots, spacing=0.2, width=2.5, height=1.5)
-        
+
         self.left_led_commands = []
         self.right_led_commands = []
 
@@ -80,7 +80,7 @@ class RobotariumABC(ABC):
             for i in range(number_of_robots):
                 # p = patches.RegularPolygon((self.poses[:2, i]), 4, math.sqrt(2)*self.robot_radius, self.poses[2,i]+math.pi/4, facecolor='#FFD700', edgecolor = 'k')
                 p = patches.Rectangle((self.poses[:2, i]+self.robot_length/2*np.array((np.cos(self.poses[2, i]+math.pi/2), np.sin(self.poses[2, i]+math.pi/2)))+\
-                                                0.04*np.array((-np.sin(self.poses[2, i]+math.pi/2), np.cos(self.poses[2, i]+math.pi/2)))), self.robot_length, self.robot_width, (self.poses[2, i] + math.pi/4) * 180/math.pi, facecolor='#FFD700', edgecolor='k')
+                                                0.04*np.array((-np.sin(self.poses[2, i]+math.pi/2), np.cos(self.poses[2, i]+math.pi/2)))), self.robot_length, self.robot_width, angle=(self.poses[2, i] + math.pi/4) * 180/math.pi, facecolor='#FFD700', edgecolor='k')
 
                 rled = patches.Circle(self.poses[:2, i]+0.75*self.robot_length/2*np.array((np.cos(self.poses[2, i]), np.sin(self.poses[2, i]))+0.04*np.array((-np.sin(self.poses[2, i]+math.pi/2), np.cos(self.poses[2, i]+math.pi/2)))),
                                        self.robot_length/2/5, fill=False)
@@ -188,7 +188,7 @@ class RobotariumABC(ABC):
                             errors["boundary"][i] += 1
                         else:
                             errors["boundary"][i] = 1
-                            
+
                     else:
                         errors["boundary"] = {i: 1}
                         errors["boundary_string"] = "iteration(s) robots were outside the boundaries."
@@ -226,4 +226,3 @@ class RobotariumABC(ABC):
                 errors["actuator_string"] = "iteration(s) where the actuator limits were exceeded."
 
         return errors
-
